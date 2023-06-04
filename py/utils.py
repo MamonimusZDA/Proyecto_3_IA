@@ -3,6 +3,20 @@
 from dashtable import data2rst as tab
 
 
+def formating_float(ls: list):
+    return [
+        format(n, '.3f') + '%'
+        for n in ls
+    ]
+
+
+def formating_content(content: list[list]):
+    return [
+        [x[0].capitalize()] + formating_float(x[1:])
+        for x in content
+    ]
+
+
 def generate_table(content: list[list]):
     hdr = [
         ['BD', 'KNN', '', '', 'Arbol de decision'],
@@ -13,13 +27,18 @@ def generate_table(content: list[list]):
         [[0, 0], [1, 0]],
         [[0, 4], [1, 4]]
     ]
-    hdr.extend(content)
+    hdr.extend(
+        sorted(
+            formating_content(content),
+            key=lambda x: x[0]
+        )
+    )
     table = tab(
         hdr, spans,
         use_headers=True,
         center_headers=True
     )
-    return table
+    print(table)
 
 
 def calculate_similarity_percentage(ls1: list, ls2: list):
